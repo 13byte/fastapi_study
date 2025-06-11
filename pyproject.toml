@@ -1,0 +1,14 @@
+[project]
+name = "python-backend"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13.4"
+dependencies = [
+    "alembic>=1.16.1",
+    "dependency-injector>=4.47.1",
+    "fastapi[standard]>=0.115.12",
+    "mysqlclient>=2.2.7",
+    "passlib[bcrypt]>=1.7.4",
+    "py-ulid>=1.0.3",
+]
