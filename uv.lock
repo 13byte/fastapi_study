@@ -201,6 +201,31 @@ standard = [
 ]
 
 [[package]]
+name = "fastapi-study"
+version = "0.1.0"
+source = { virtual = "." }
+dependencies = [
+    { name = "alembic" },
+    { name = "dependency-injector" },
+    { name = "fastapi", extra = ["standard"] },
+    { name = "mysqlclient" },
+    { name = "passlib", extra = ["bcrypt"] },
+    { name = "py-ulid" },
+    { name = "python-dotenv" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "alembic", specifier = ">=1.16.1" },
+    { name = "dependency-injector", specifier = ">=4.47.1" },
+    { name = "fastapi", extras = ["standard"], specifier = ">=0.115.12" },
+    { name = "mysqlclient", specifier = ">=2.2.7" },
+    { name = "passlib", extras = ["bcrypt"], specifier = ">=1.7.4" },
+    { name = "py-ulid", specifier = ">=1.0.3" },
+    { name = "python-dotenv", specifier = ">=1.1.0" },
+]
+
+[[package]]
 name = "greenlet"
 version = "3.2.3"
 source = { registry = "https://pypi.org/simple" }
@@ -437,29 +462,6 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/7c/2d/c3338d48ea6cc0feb8446d8e6937e1408088a72a39937982cc6111d17f84/pygments-2.19.1.tar.gz", hash = "sha256:61c16d2a8576dc0649d9f39e089b5f02bcd27fba10d8fb4dcc28173f7a45151f", size = 4968581, upload-time = "2025-01-06T17:26:30.443Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/8a/0b/9fcc47d19c48b59121088dd6da2488a49d5f72dacf8262e2790a1d2c7d15/pygments-2.19.1-py3-none-any.whl", hash = "sha256:9ea1544ad55cecf4b8242fab6dd35a93bbce657034b0611ee383099054ab6d8c", size = 1225293, upload-time = "2025-01-06T17:26:25.553Z" },
-]
-
-[[package]]
-name = "python-backend"
-version = "0.1.0"
-source = { virtual = "." }
-dependencies = [
-    { name = "alembic" },
-    { name = "dependency-injector" },
-    { name = "fastapi", extra = ["standard"] },
-    { name = "mysqlclient" },
-    { name = "passlib", extra = ["bcrypt"] },
-    { name = "py-ulid" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "alembic", specifier = ">=1.16.1" },
-    { name = "dependency-injector", specifier = ">=4.47.1" },
-    { name = "fastapi", extras = ["standard"], specifier = ">=0.115.12" },
-    { name = "mysqlclient", specifier = ">=2.2.7" },
-    { name = "passlib", extras = ["bcrypt"], specifier = ">=1.7.4" },
-    { name = "py-ulid", specifier = ">=1.0.3" },
 ]
 
 [[package]]
