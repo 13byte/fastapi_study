@@ -4,7 +4,7 @@ from user.domain.user import User
 
 class IUserRepository(metaclass=ABCMeta):
     @abstractmethod
-    def save(self, user: User) -> User:
+    def save(self, user: User) -> None:
         raise NotImplementedError
 
     @abstractmethod
@@ -20,5 +20,5 @@ class IUserRepository(metaclass=ABCMeta):
         raise NotImplementedError
 
     @abstractmethod
-    def update(self, user: User) -> User:
+    def update(self, user: User):
         raise NotImplementedError

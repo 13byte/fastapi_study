@@ -28,9 +28,36 @@ class UserRepository(IUserRepository):
 
     def find_by_email(self, email: str) -> UserVO:
         with SessionLocal() as db:
-            user = db.query(User).filter(User.emial == email).first()
+            user = db.query(User).filter(User.email == email).first()
 
         if not user:
             raise HTTPException(status_code=422)
 
         return UserVO(**row_to_dict(user))
+
+    def find_by_id(self, id: str):
+        with SessionLocal() as db:
+            user = db.query(User).filter(User.id == id).first()
+
+        if not user:
+            raise HTTPException(status_code=422)
+
+        return UserVO(**row_to_dict(user))
+
+    def update(self, user_vo: UserVO) -> User:
+        with SessionLocal() as db:
+            user = db.query(User).filter(User.id == user_vo.id).first()
+
+            if not user:
+                raise HTTPException(status_code=422)
+
+            user.name = user_vo.name
+            user.password = user_vo.password
+
+            try:
+                db.add(user)
+                db.commit()
+            finally:
+                db.close()
+
+        return user
