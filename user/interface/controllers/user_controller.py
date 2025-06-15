@@ -1,22 +1,37 @@
 from fastapi import APIRouter, Depends
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr, Field
 from user.domain.user import User
 from user.application.user_service import UserService
 from containers import Container
 from dependency_injector.wiring import inject, Provide
+from datetime import datetime
 
 router = APIRouter(prefix="/users")
 
 
 class CreateUserBody(BaseModel):
-    name: str
-    email: str
-    password: str
+    name: str = Field(min_length=2, max_length=32)
+    email: EmailStr = Field(max_length=64)
+    password: str = Field(min_length=8, max_length=32)
 
 
 class UpdateUser(BaseModel):
-    name: str | None = None
-    password: str | None = None
+    name: str | None = Field(min_length=2, max_length=32, default=None)
+    password: str | None = Field(min_length=8, max_length=32, default=None)
+
+
+class UserResponse(BaseModel):
+    id: str
+    name: str
+    email: str
+    created_at: datetime
+    updated_at: datetime
+
+
+class GetUserResponse(BaseModel):
+    total_count: int
+    page: int
+    users: list[UserResponse]
 
 
 @router.post("", status_code=201)
@@ -24,7 +39,7 @@ class UpdateUser(BaseModel):
 async def create_user(
     user: CreateUserBody,
     user_service: UserService = Depends(Provide[Container.user_service]),
-) -> User:
+) -> UserResponse:
     created_user = user_service.create_user(
         name=user.name, email=user.email, password=user.password
     )
@@ -52,7 +67,7 @@ def get_users(
     page: int = 1,
     items_per_page: int = 10,
     user_service: UserService = Depends(Provide[Container.user_service]),
-) -> dict[str, int | list[User]]:
+) -> GetUserResponse:
     total_count, users = user_service.get_users(page, items_per_page)
 
     return {
