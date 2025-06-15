@@ -63,3 +63,6 @@ class UserService:
         users = self.user_repo.get_users(page, items_per_page)
 
         return users
+
+    def delete_user(self, user_id: str) -> None:
+        self.user_repo.delete(user_id)
