@@ -8,5 +8,5 @@ class Crypto:
     def encrypt(self, secret: str) -> str:
         return self.pwd_context.hash(secret)
 
-    def verufy(self, secret: str, hash: str) -> bool:
+    def verify(self, secret: str, hash: str) -> bool:
         return self.pwd_context.verify(secret, hash)

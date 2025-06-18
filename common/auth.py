@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from fastapi import HTTPException, status
 from jose import JWTError, jwt
 
-SECERT_KEY = "THIS_IS_SUPER_SECRET_KEY"
+SECRET_KEY = "THIS_IS_SUPER_SECRET_KEY"
 ALGORITHM = "HS256"
 
 
@@ -12,7 +12,7 @@ def create_access_token(
 ):
     expire = datetime.utcnow() + expires_delta
     payload.update({"exp": expire})
-    encoded_jwt = jwt_encode(payload, SECRET_KEY, algorithm=ALGORITHM)
+    encoded_jwt = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
 
     return encoded_jwt
 

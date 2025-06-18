@@ -72,7 +72,7 @@ class UserService:
         user = self.user_repo.find_by_email(email)
 
         if not self.crypto.verify(password, user.password):
-            raise HTTPEXception(status_code=status.HTTP_401_UNAUTHORIZED)
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
         access_token = create_access_token(payload={"user_id": user.id})
 
