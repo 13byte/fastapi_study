@@ -41,7 +41,7 @@ def decode_access_token(token: str):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
 
-def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
+def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]) -> CurrentUser:
     payload = decode_access_token(token)
 
     user_id = payload.get("user_id")
@@ -51,3 +51,13 @@ def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN)
 
     return CurrentUser(user_id, Role(role))
+
+
+def get_admin_user(token: Annotated[str, Depends(oauth2_scheme)]) -> CurrentUser:
+    payload = decode_access_token(token)
+
+    role = payload.get("role")
+    if not role or role != Role.ADMIN:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN)
+
+    return CUrrentUser("ADMIN_USER_ID", role)

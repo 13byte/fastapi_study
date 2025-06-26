@@ -7,7 +7,7 @@ from containers import Container
 from dependency_injector.wiring import inject, Provide
 from datetime import datetime
 from typing import Annotated
-from common.auth import CurrentUser, get_current_user
+from common.auth import CurrentUser, get_current_user, get_admin_user
 
 router = APIRouter(prefix="/users")
 
@@ -68,6 +68,7 @@ def update_user(
 def get_users(
     page: int = 1,
     items_per_page: int = 10,
+    current_user: CurrentUser = Depends(get_admin_user),
     user_service: UserService = Depends(Provide[Container.user_service]),
 ) -> GetUserResponse:
     total_count, users = user_service.get_users(page, items_per_page)
@@ -82,12 +83,12 @@ def get_users(
 @router.delete("", status_code=204)
 @inject
 def delete_user(
-    user_id: str,
+    current_user: CurrentUser = Depends(get_current_user),
     user_service: UserService = Depends(Provide[Container.user_service]),
 ) -> None:
     # TODO: 다른 유저를 삭제할 수 없도록 토큰에서 유저 아이디를 구한다
 
-    user_service.delete_user(user_id)
+    user_service.delete_user(current_user.id)
 
 
 @router.post("/login")
