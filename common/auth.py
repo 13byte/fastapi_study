@@ -41,7 +41,7 @@ def decode_access_token(token: str):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
 
-def get_current_user(token: Annotated[str, Depends[oauth2_scheme]]):
+def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     payload = decode_access_token(token)
 
     user_id = payload.get("user_id")
