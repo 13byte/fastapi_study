@@ -4,8 +4,8 @@ from typing import Annotated
 from datetime import datetime, timedelta, timezone
 from fastapi import Depends, HTTPException, status
 from jose import JWTError, jwt
-from enum import StrEnum
 from config import get_settings
+from user.domain.user import UserRole
 
 settings = get_settings()
 
@@ -14,20 +14,15 @@ ALGORITHM = "HS256"
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/users/login")
 
 
-class Role(StrEnum):
-    ADMIN = "ADMIN"
-    USER = "USER"
-
-
 @dataclass
 class CurrentUser:
     id: str
-    role: Role
+    role: UserRole
 
 
 def create_access_token(
     payload: dict,
-    role: Role,
+    role: UserRole,
     expires_delta: timedelta = timedelta(hours=6),
 ):
     expire = datetime.now(timezone.utc) + expires_delta
@@ -50,17 +45,19 @@ def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]) -> CurrentUs
     user_id = payload.get("user_id")
     role = payload.get("role")
 
-    if not user_id or not role or role != Role.USER:
+    if not user_id or not role or role != UserRole.USER:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN)
 
-    return CurrentUser(user_id, Role(role))
+    return CurrentUser(user_id, UserRole(role))
 
 
 def get_admin_user(token: Annotated[str, Depends(oauth2_scheme)]) -> CurrentUser:
     payload = decode_access_token(token)
 
+    user_id = payload.get("user_id")
     role = payload.get("role")
-    if not role or role != Role.ADMIN:
+
+    if not role or role != UserRole.ADMIN:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN)
 
-    return CUrrentUser("ADMIN_USER_ID", role)
+    return CurrentUser(user_id, UserRole(role))

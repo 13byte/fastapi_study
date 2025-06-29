@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 from pydantic import BaseModel, EmailStr, Field
-from user.domain.user import User
+from user.domain.user import User, UserRole
 from user.application.user_service import UserService
 from containers import Container
 from dependency_injector.wiring import inject, Provide
@@ -16,6 +16,7 @@ class CreateUserBody(BaseModel):
     name: str = Field(min_length=2, max_length=32)
     email: EmailStr = Field(max_length=64)
     password: str = Field(min_length=8, max_length=32)
+    role: UserRole = Field(default=UserRole.USER)
 
 
 class UpdateUserBody(BaseModel):
@@ -27,6 +28,7 @@ class UserResponse(BaseModel):
     id: str
     name: str
     email: str
+    role: UserRole
     created_at: datetime
     updated_at: datetime
 
@@ -44,7 +46,7 @@ async def create_user(
     user_service: UserService = Depends(Provide[Container.user_service]),
 ) -> UserResponse:
     created_user = user_service.create_user(
-        name=user.name, email=user.email, password=user.password
+        name=user.name, email=user.email, password=user.password, role=user.role
     )
     return created_user
 
@@ -86,8 +88,6 @@ def delete_user(
     current_user: CurrentUser = Depends(get_current_user),
     user_service: UserService = Depends(Provide[Container.user_service]),
 ) -> None:
-    # TODO: 다른 유저를 삭제할 수 없도록 토큰에서 유저 아이디를 구한다
-
     user_service.delete_user(current_user.id)
 
 

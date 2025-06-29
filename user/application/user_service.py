@@ -1,9 +1,9 @@
 from ulid import ULID
 from datetime import datetime
-from user.domain.user import User
+from user.domain.user import User, UserRole
 from user.domain.repository.user_repo import IUserRepository
 from fastapi import HTTPException, status
-from common.auth import Role, create_access_token
+from common.auth import create_access_token
 from utils.crypto import Crypto
 from dependency_injector.wiring import inject
 
@@ -16,7 +16,12 @@ class UserService:
         self.crypto = Crypto()
 
     def create_user(
-        self, name: str, email: str, password: str, memo: str | None = None
+        self,
+        name: str,
+        email: str,
+        password: str,
+        role: UserRole,
+        memo: str | None = None,
     ) -> User:
         _user = None
 
@@ -35,6 +40,7 @@ class UserService:
             name=name,
             email=email,
             password=self.crypto.encrypt(password),
+            role=role,
             memo=memo,
             created_at=now,
             updated_at=now,
@@ -74,9 +80,6 @@ class UserService:
         if not self.crypto.verify(password, user.password):
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
-        access_token = create_access_token(
-            payload={"user_id": user.id},
-            role=Role.USER,
-        )
+        access_token = create_access_token(payload={"user_id": user.id}, role=user.role)
 
         return access_token
