@@ -16,7 +16,6 @@ class CreateUserBody(BaseModel):
     name: str = Field(min_length=2, max_length=32)
     email: EmailStr = Field(max_length=64)
     password: str = Field(min_length=8, max_length=32)
-    role: UserRole = Field(default=UserRole.USER)
 
 
 class UpdateUserBody(BaseModel):
@@ -46,7 +45,7 @@ async def create_user(
     user_service: UserService = Depends(Provide[Container.user_service]),
 ) -> UserResponse:
     created_user = user_service.create_user(
-        name=user.name, email=user.email, password=user.password, role=user.role
+        name=user.name, email=user.email, password=user.password
     )
     return created_user
 

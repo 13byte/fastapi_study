@@ -20,7 +20,6 @@ class UserService:
         name: str,
         email: str,
         password: str,
-        role: UserRole,
         memo: str | None = None,
     ) -> User:
         _user = None
@@ -40,8 +39,8 @@ class UserService:
             name=name,
             email=email,
             password=self.crypto.encrypt(password),
-            role=role,
             memo=memo,
+            role=UserRole.USER,
             created_at=now,
             updated_at=now,
         )
