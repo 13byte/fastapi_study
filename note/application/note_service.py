@@ -60,7 +60,7 @@ class NoteService:
             items_per_page=items_per_page,
         )
 
-    def get_notes(self, user_id: str, id: str) -> Note:
+    def get_note(self, user_id: str, id: str) -> Note:
         return self.note_repo.find_by_id(user_id=user_id, id=id)
 
     def get_notes_by_tag(
